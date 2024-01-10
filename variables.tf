@@ -8,6 +8,11 @@ variable "ecs_cluster_arn" {
   description = "The ARN of the ECS cluster where service will be provisioned"
 }
 
+variable "ecs_cluster_name" {
+  type        = string
+  description = "The name of the ECS cluster where service will be provisioned"
+}
+
 variable "ecs_load_balancers" {
   type = list(object({
     container_name   = string
@@ -551,4 +556,28 @@ variable "pid_mode" {
     condition     = var.pid_mode == null || contains(["host", "task"], coalesce(var.pid_mode, "null"))
     error_message = "The pid_mode value must be one of host or task."
   }
+}
+
+variable "autoscaling" {
+  type = object({
+    min_capacity  = number
+    max_capacity  = number
+    desired_count = number
+    target_cpu    = number
+    target_memory = number
+  })
+  description = "Scaling configuration for ECS services."
+  default = {
+    min_capacity  = 1
+    max_capacity  = 10
+    desired_count = 1
+    target_cpu    = 60
+    target_memory = 60
+  }
+}
+
+variable "autoscaling_enabled" {
+  type        = bool
+  description = "Whether to create resources related to deploying autoscaling functionality."
+  default     = false
 }
