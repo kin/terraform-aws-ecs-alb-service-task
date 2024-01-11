@@ -1,5 +1,5 @@
 locals {
-  cluster_name = var.ecs_cluster_name == null ? split("/", var.ecs_cluster_arn)[1] : var.ecs_cluster_name
+  cluster_name = split("/", var.ecs_cluster_arn)[1]
 }
 
 resource "aws_iam_role" "autoscale" {

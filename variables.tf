@@ -8,11 +8,6 @@ variable "ecs_cluster_arn" {
   description = "The ARN of the ECS cluster where service will be provisioned"
 }
 
-variable "ecs_cluster_name" {
-  type        = string
-  description = "The name of the ECS cluster where service will be provisioned"
-}
-
 variable "ecs_load_balancers" {
   type = list(object({
     container_name   = string
