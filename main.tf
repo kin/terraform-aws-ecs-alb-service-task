@@ -15,9 +15,9 @@ locals {
     redeployment = timestamp()
   } : {}
 
-  task_policy_arns_map = merge({ for i, a in var.task_policy_arns : format("_#%v_", i) => a }, var.task_policy_arns_map)
+  task_policy_arns_map = merge({ for i, a in var.task_policy_arns : i => a }, var.task_policy_arns_map)
 
-  task_exec_policy_arns_map = merge({ for i, a in var.task_exec_policy_arns : format("_#%v_", i) => a }, var.task_exec_policy_arns_map)
+  task_exec_policy_arns_map = merge({ for i, a in var.task_exec_policy_arns : i => a }, var.task_exec_policy_arns_map)
 }
 
 module "task_label" {
