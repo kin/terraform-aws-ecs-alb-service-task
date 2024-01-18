@@ -145,7 +145,7 @@ resource "aws_ecs_task_definition" "default" {
     }
   }
 
-  tags = var.use_old_arn ? null : module.this.attributes
+  tags = var.use_old_arn ? null : module.task_label.tags
 }
 
 # IAM
