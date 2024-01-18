@@ -51,7 +51,7 @@ module "exec_label" {
 
 resource "aws_ecs_task_definition" "default" {
   count                    = local.create_task_definition ? 1 : 0
-  family                   = var.ecs_service_name
+  family                   = var.ecs_service_name != null ? var.ecs_service_name : module.service_label.id
   container_definitions    = var.container_definition_json
   requires_compatibilities = [var.launch_type]
   network_mode             = var.network_mode
