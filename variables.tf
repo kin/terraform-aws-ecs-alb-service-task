@@ -81,6 +81,11 @@ variable "container_port" {
   default     = 80
 }
 
+variable "use_traefik_security_group" {
+  type        = bool
+  description = "A flag to enable/disable adding the traefik service security group"
+  default     = false
+}
 variable "use_nlb_cidr_blocks" {
   type        = bool
   description = "A flag to enable/disable adding the NLB ingress rule to the service security group"

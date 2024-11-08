@@ -352,6 +352,20 @@ resource "aws_security_group_rule" "alb" {
   security_group_id        = one(aws_security_group.ecs_service[*]["id"])
 }
 
+data "aws_security_group" "traefik" {
+  count = local.create_security_group && var.use_traefik_security_group ? 1 : 0
+  name  = "traefik-service"
+}
+resource "aws_security_group_rule" "traefik" {
+  count                    = local.create_security_group && var.use_traefik_security_group ? 1 : 0
+  description              = "Allow inbound traffic from ALB"
+  type                     = "ingress"
+  from_port                = var.container_port
+  to_port                  = var.container_port
+  protocol                 = "tcp"
+  source_security_group_id = data.aws_security_group.traefik[0].id
+  security_group_id        = one(aws_security_group.ecs_service[*]["id"])
+}
 resource "aws_security_group_rule" "nlb" {
   count             = local.create_security_group && var.use_nlb_cidr_blocks ? 1 : 0
   description       = "Allow inbound traffic from NLB"
