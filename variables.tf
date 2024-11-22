@@ -19,7 +19,7 @@ variable "ecs_load_balancers" {
     elb_name         = string
     target_group_arn = string
   }))
-  default = []
+  default     = []
   description = "A list of load balancer config objects for the ECS service; see [ecs_service#load_balancer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service#load_balancer) docs"
 }
 
