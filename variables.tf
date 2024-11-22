@@ -20,16 +20,19 @@ variable "ecs_load_balancers" {
     target_group_arn = string
   }))
   validation {
-    condition     = length(var.ecs_load_balancers) > 0 && alltrue(flatten([
-      for lb in var.ecs_load_balancers :
-      [
-        length(lb.container_name) > 0,
-        lb.container_port != null,
-        (lb.elb_name != null ? length(lb.elb_name) > 0 : true),
-        (lb.target_group_arn != null ? length(lb.target_group_arn) > 0 : true)
-      ]
-    ]))
-    error_message = "All entries in ecs_load_balancers must be defined with non-empty values, and the list must not be empty."
+    condition = var.use_traefik || (
+      length(var.ecs_load_balancers) > 0 &&
+      alltrue(flatten([
+        for lb in var.ecs_load_balancers :
+        [
+          length(lb.container_name) > 0,
+          lb.container_port != null,
+          (lb.elb_name != null ? length(lb.elb_name) > 0 : true),
+          (lb.target_group_arn != null ? length(lb.target_group_arn) > 0 : true)
+        ]
+      ]))
+    )
+    error_message = "When Traefik is not in use, all entries in ecs_load_balancers must be defined with non-empty values, and the list must not be empty."
   }
   description = "A list of load balancer config objects for the ECS service; see [ecs_service#load_balancer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service#load_balancer) docs"
 }
@@ -605,5 +608,11 @@ variable "sg_name" {
 variable "use_traefik_security_group" {
   type        = bool
   description = "A flag to enable/disable adding the traefik service security group"
+  default     = false
+}
+
+variable "use_traefik" {
+  type        = bool
+  description = "When set to true traefik routing tags are enabled and alb routes are removed"
   default     = false
 }
