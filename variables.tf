@@ -596,9 +596,3 @@ variable "use_traefik_security_group" {
   description = "A flag to enable/disable adding the traefik service security group"
   default     = false
 }
-
-variable "use_traefik" {
-  type        = bool
-  description = "When set to true traefik routing tags are enabled and alb routes are removed"
-  default     = false
-}
