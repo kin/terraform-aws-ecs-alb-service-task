@@ -13,7 +13,7 @@ locals {
 resource "aws_iam_role" "event_bridge_codedeploy" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
-  name = "EventBridgeCodeDeploy"
+  name = "EventBridgeCodeDeploy-${var.ecs_load_balancers[0].container_name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -31,7 +31,7 @@ resource "aws_iam_role" "event_bridge_codedeploy" {
 resource "aws_iam_role_policy" "event_bridge_codedeploy" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
-  name = "EventBridgeCodeDeployAccess"
+  name = "EventBridgeCodeDeployAccess-${var.ecs_load_balancers[0].container_name}"
   role = aws_iam_role.event_bridge_codedeploy[0].id
 
   policy = jsonencode({
