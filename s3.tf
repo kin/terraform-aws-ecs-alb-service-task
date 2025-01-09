@@ -22,7 +22,7 @@ resource "aws_s3_object" "appspec_artifacts" {
 
   bucket  = aws_s3_bucket.appspec_artifacts[0].id
   key     = "${local.container_name}-appspec"
-  content = local.appspec_sha256
+  content = local.appspec_content
   # Using etag for versioning, it will change if content changes
   etag = local.appspec_sha256
 
