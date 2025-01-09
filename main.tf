@@ -20,9 +20,9 @@ locals {
   task_exec_policy_arns_map = merge({ for i, a in var.task_exec_policy_arns : format("_#%v_", i) => a }, var.task_exec_policy_arns_map)
 
   #appspec content for applications that have CodeDeploy enabled
-  container_name  = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_name : "rift"
-  container_port  = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
-  timestamp       = timestamp()
+  container_name = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_name : "rift"
+  container_port = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
+  timestamp      = timestamp()
   appspec_content = jsonencode({
     version = 1
     Resources = [
@@ -41,7 +41,7 @@ locals {
     ]
     timestamp = local.timestamp
   })
-  appspec_sha256  = sha256(local.appspec_content)
+  appspec_sha256 = sha256(local.appspec_content)
 }
 
 module "task_label" {
