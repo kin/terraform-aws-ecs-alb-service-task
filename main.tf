@@ -39,7 +39,6 @@ locals {
         }
       }
     ]
-    timestamp = local.timestamp
   })
   appspec_sha256 = sha256(local.appspec_content)
 }
