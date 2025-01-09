@@ -8,6 +8,15 @@ resource "aws_s3_bucket" "appspec_artifacts" {
   tags = module.this.tags
 }
 
+resource "aws_s3_bucket_versioning" "versioning_example" {
+  count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+
+  bucket = aws_s3_bucket.appspec_artifacts[0].id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_object" "appspec_artifacts" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
