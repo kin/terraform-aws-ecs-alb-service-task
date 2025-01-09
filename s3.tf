@@ -35,7 +35,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "appspec_artifacts" {
   bucket = aws_s3_bucket.appspec_artifacts[0].id
 
   rule {
-    id     = "expire-old-versions"
+    id     = "store-old-versions"
     status = "Enabled"
 
     transition {
