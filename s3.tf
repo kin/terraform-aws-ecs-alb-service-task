@@ -1,19 +1,19 @@
 ## S3 Bucket for applications with CodeDeploy enabled only
 
-resource "local_file" "appspec" {
-  count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
-
-  content  = local.appspec_content
-  filename = "${path.module}/appspec.yml"
-}
-
-data "archive_file" "appspec" {
-  count       = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
-  type        = "zip"
-  source_file = local_file.appspec[0].filename
-  output_path = "${path.module}/${local.container_name}-appspec.zip"
-  depends_on  = [local_file.appspec]
-}
+# resource "local_file" "appspec" {
+#   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+#
+#   content  = local.appspec_content
+#   filename = "${path.module}/appspec.yml"
+# }
+#
+# data "archive_file" "appspec" {
+#   count       = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+#   type        = "zip"
+#   source_file = local_file.appspec[0].filename
+#   output_path = "${path.module}/${local.container_name}-appspec.zip"
+#   depends_on  = [local_file.appspec]
+# }
 
 resource "aws_s3_bucket" "appspec_artifacts" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
@@ -37,7 +37,7 @@ resource "aws_s3_object" "appspec_artifacts" {
 
   bucket     = aws_s3_bucket.appspec_artifacts[0].id
   key        = "${local.container_name}-appspec.yml"
-  source     = local.appspec_content
+  content    = local.appspec_content
   etag       = local.appspec_sha256 # Using etag for versioning, it will change if content changes
   tags       = module.this.tags
 }
