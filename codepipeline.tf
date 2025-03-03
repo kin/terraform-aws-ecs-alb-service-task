@@ -24,12 +24,7 @@ resource "aws_iam_role_policy" "default" {
     Statement = [
       {
         Effect = "Allow"
-        Action = [
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:PutObject",
-          "s3:PutObjectAcl"
-        ]
+        Action   = "s3:*"
         Resource = [
           aws_s3_bucket.appspec_artifacts[0].arn,
           "${aws_s3_bucket.appspec_artifacts[0].arn}/*"
