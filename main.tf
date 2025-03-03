@@ -35,7 +35,7 @@ Resources:
           ContainerName: "${local.container_name}"
           ContainerPort: ${local.container_port}
 YAML
-  appspec_sha256 = sha256(local.appspec_content)
+  appspec_sha256  = sha256(local.appspec_content)
 }
 
 module "task_label" {
