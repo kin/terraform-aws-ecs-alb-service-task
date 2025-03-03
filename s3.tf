@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    local = {
-      source  = "hashicorp/local"
-      version = "2.5.1"
-    }
-  }
-}
 ## S3 Bucket for applications with CodeDeploy enabled only
 
 resource "local_file" "appspec" {
