@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 // IAM
 resource "aws_iam_role" "default" {
   name = "CodePipelineRole"
@@ -25,9 +27,11 @@ resource "aws_iam_role_policy" "default" {
         Action = [
           "s3:GetObject",
           "s3:ListBucket",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:PutObjectAcl"
         ]
         Resource = [
+          aws_s3_bucket.appspec_artifacts[0].arn,
           "${aws_s3_bucket.appspec_artifacts[0].arn}/*"
         ]
       },
@@ -35,6 +39,19 @@ resource "aws_iam_role_policy" "default" {
         Effect   = "Allow"
         Action   = "codedeploy:*"
         Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "codepipeline:*"
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = [
+          aws_iam_role.default.arn,
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.container_name}"
+        ]
       }
     ]
   })
