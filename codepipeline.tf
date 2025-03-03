@@ -73,7 +73,7 @@ resource "aws_codepipeline" "default" {
 
       configuration = {
         S3Bucket    = aws_s3_bucket.appspec_artifacts[0].bucket
-        S3ObjectKey = "${local.container_name}-appspec"
+        S3ObjectKey = "${local.container_name}-appspec.zip"
       }
     }
   }

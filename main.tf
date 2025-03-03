@@ -25,7 +25,7 @@ locals {
   container_port  = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
   timestamp       = timestamp()
   appspec_content = <<YAML
-version: 1.0
+version: 0.0
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
@@ -35,6 +35,7 @@ Resources:
           ContainerName: "${local.container_name}"
           ContainerPort: ${local.container_port}
 YAML
+  appspec_sha256 = sha256(local.appspec_content)
 }
 
 module "task_label" {

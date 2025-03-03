@@ -21,8 +21,8 @@ resource "aws_s3_object" "appspec_artifacts" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
   bucket  = aws_s3_bucket.appspec_artifacts[0].id
-  key     = "${local.container_name}-appspec"
-  content = local.appspec_content
+  key     = "${local.container_name}-appspec.zip"
+  content = base64encode(zipmap(["appspec.yml"], [local.appspec_content]))
   # Using etag for versioning, it will change if content changes
   etag = local.appspec_sha256
 
