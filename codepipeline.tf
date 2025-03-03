@@ -49,7 +49,6 @@ resource "aws_iam_role_policy" "default" {
         Effect = "Allow"
         Action = "iam:PassRole"
         Resource = [
-          aws_iam_role.default.arn,
           "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.container_name}"
         ]
       }
