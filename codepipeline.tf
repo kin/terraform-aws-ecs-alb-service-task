@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "default" {
           "s3:PutObject"
         ]
         Resource = [
-          "${aws_s3_bucket.appspec_artifacts.arn}/*"
+          "${aws_s3_bucket.appspec_artifacts[0].arn}/*"
         ]
       },
       {
@@ -46,7 +46,7 @@ resource "aws_codepipeline" "default" {
   role_arn = aws_iam_role.default.arn
 
   artifact_store {
-    location = aws_s3_bucket.appspec_artifacts.bucket
+    location = aws_s3_bucket.appspec_artifacts[0].bucket
     type     = "S3"
   }
 
@@ -61,7 +61,7 @@ resource "aws_codepipeline" "default" {
       output_artifacts = ["SourceOutput"]
 
       configuration = {
-        S3Bucket    = aws_s3_bucket.appspec_artifacts.bucket
+        S3Bucket    = aws_s3_bucket.appspec_artifacts[0].bucket
         S3ObjectKey = "${local.container_name}-appspec"
         PollforSourceChanges = false
       }
