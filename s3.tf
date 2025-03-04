@@ -17,7 +17,9 @@ resource "null_resource" "zip_appspec" {
   provisioner "local-exec" {
     command = <<EOT
       cd ${path.module}
+      rm -f appspec.zip
       zip appspec.zip appspec.yml
+      [ -f appspec.zip ] || (echo "Failed to create appspec.zip" && exit 1)
     EOT
   }
 
