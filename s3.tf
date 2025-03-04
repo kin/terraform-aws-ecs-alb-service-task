@@ -1,5 +1,18 @@
 ## S3 Bucket for applications with CodeDeploy enabled only
 
+resource "local_file" "appspec" {
+  count    = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+  content  = local.appspec_content
+  filename = "${path.module}/appspec.yml"
+}
+
+data "archive_file" "appspec" {
+  count       = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+  type        = "zip"
+  source_file = local_file.appspec[0].filename
+  output_path = "${path.module}/appspec.zip"
+}
+
 resource "aws_s3_bucket" "appspec_artifacts" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
@@ -17,13 +30,15 @@ resource "aws_s3_bucket_versioning" "versioning_example" {
 }
 
 resource "aws_s3_object" "appspec_artifacts" {
-  count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+  count   = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
-  bucket     = aws_s3_bucket.appspec_artifacts[0].id
-  key        = "source/appspec.yml"
-  content    = local.appspec_content
-  etag       = local.appspec_sha256 # Using etag for versioning, it will change if content changes
-  tags       = module.this.tags
+  bucket  = aws_s3_bucket.appspec_artifacts[0].id
+  key     = "source/appspec.zip"  # Pre-zipped file
+  source  = data.archive_file.appspec[0].output_path
+  etag    = filemd5(data.archive_file.appspec[0].output_path)
+  tags    = module.this.tags
+
+  depends_on = [data.archive_file.appspec]
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "appspec_artifacts" {
