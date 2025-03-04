@@ -41,6 +41,27 @@ resource "aws_iam_role_policy" "default" {
         Resource = "*"
       },
       {
+        Effect   = "Allow"
+        Action   = [
+          "ecs:RegisterTaskDefinition",
+          "ecs:DescribeTaskDefinition",
+          "ecs:UpdateService",
+          "ecs:DescribeServices"
+        ]
+        resources = ["*"]
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "elasticloadbalancing:DescribeTargetGroups",
+          "elasticloadbalancing:DescribeListeners",
+          "elasticloadbalancing:ModifyListener",
+          "elasticloadbalancing:DescribeRules",
+          "elasticloadbalancing:ModifyRule"
+        ]
+        Resource = ["*"]
+      },
+      {
         Effect = "Allow"
         Action = "iam:PassRole"
         Resource = [
