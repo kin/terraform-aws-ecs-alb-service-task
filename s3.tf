@@ -1,12 +1,13 @@
 ## S3 Bucket for applications with CodeDeploy enabled only
 locals {
+  container_definitions = try(jsondecode(var.container_definition_json), var.container_definition_json)
   taskdef_content = jsonencode({
     family               = var.ecs_service_name != null ? var.ecs_service_name : module.service_label.id
-    containerDefinitions = var.container_definition_json
+    containerDefinitions = local.container_definitions
     executionRoleArn     = length(local.task_exec_role_arn) > 0 ? local.task_exec_role_arn : one(aws_iam_role.ecs_exec[*]["arn"])
     networkMode          = var.network_mode
-    cpu                  = var.task_cpu
-    memory               = var.task_memory
+    cpu                  = tostring(var.task_cpu)
+    memory               = tostring(var.task_memory)
   })
   appspec_content = <<YAML
 version: 0.0
