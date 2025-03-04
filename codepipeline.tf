@@ -71,7 +71,7 @@ resource "aws_codepipeline" "default" {
       output_artifacts = ["SourceOutput"]
       configuration = {
         S3Bucket    = aws_s3_bucket.appspec_artifacts[0].bucket
-        S3ObjectKey = "source/"
+        S3ObjectKey = "source/appspec.zip"
       }
     }
   }
@@ -94,6 +94,6 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
-  depends_on = [aws_s3_object.appspec_artifacts, aws_s3_object.taskdef_artifacts]
+  depends_on = [aws_s3_object.appspec_artifacts]
 }
 
