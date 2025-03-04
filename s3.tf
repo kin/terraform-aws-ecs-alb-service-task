@@ -44,9 +44,9 @@ resource "aws_s3_object" "appspec_artifacts" {
   count   = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
   bucket  = aws_s3_bucket.appspec_artifacts[0].id
-  key     = "source/appspec.zip"  # Pre-zipped file
-  content = file("${path.module}/appspec.zip")
-  etag    = local.appspec_sha256
+  key     = "source/appspec.zip"
+  source  = "${path.module}/appspec.zip"
+  etag    = sha256(filebase64("${path.module}/appspec.zip"))
   tags    = module.this.tags
 
   depends_on = [null_resource.zip_appspec]
