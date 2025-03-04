@@ -46,7 +46,7 @@ resource "aws_s3_object" "appspec_artifacts" {
   bucket  = aws_s3_bucket.appspec_artifacts[0].id
   key     = "source/appspec.zip"
   source  = "${path.module}/appspec.zip"
-  etag    = sha256(filebase64("${path.module}/appspec.zip"))
+  etag    = local.appspec_sha256
   tags    = module.this.tags
 
   depends_on = [null_resource.zip_appspec]
