@@ -71,7 +71,7 @@ resource "aws_codepipeline" "default" {
       output_artifacts = ["SourceOutput"]
       configuration = {
         S3Bucket    = aws_s3_bucket.appspec_artifacts[0].bucket
-        S3ObjectKey = "source/appspec.yml"
+        S3ObjectKey = "source/"
       }
     }
   }
@@ -88,10 +88,12 @@ resource "aws_codepipeline" "default" {
         ApplicationName                = local.container_name
         DeploymentGroupName            = local.container_name
         TaskDefinitionTemplateArtifact = "SourceOutput"
+        TaskDefinitionTemplatePath     = "taskdef.json"
         AppSpecTemplateArtifact        = "SourceOutput"
+        AppspecTemplatePath            = "appspec.yml"
       }
     }
   }
-  depends_on = [aws_s3_object.appspec_artifacts]
+  depends_on = [aws_s3_object.appspec_artifacts, aws_s3_object.taskdef_artifacts]
 }
 

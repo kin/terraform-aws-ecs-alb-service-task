@@ -46,6 +46,16 @@ resource "aws_s3_object" "appspec_artifacts" {
   tags   = module.this.tags
 }
 
+resource "aws_s3_object" "taskdef_artifacts" {
+  count   = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
+
+  bucket  = aws_s3_bucket.appspec_artifacts[0].id
+  key     = "source/taskdef.json"
+  content = local.taskdef_content
+  etag    = sha256(local.taskdef_content)
+  tags    = module.this.tags
+}
+
 resource "aws_s3_bucket" "appspec_artifacts" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
