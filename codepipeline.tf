@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "default" {
           "ecs:UpdateService",
           "ecs:DescribeServices"
         ]
-        resources = ["*"]
+        resources = "*"
       },
       {
         Effect   = "Allow"
@@ -59,7 +59,7 @@ resource "aws_iam_role_policy" "default" {
           "elasticloadbalancing:DescribeRules",
           "elasticloadbalancing:ModifyRule"
         ]
-        Resource = ["*"]
+        Resource = "*"
       },
       {
         Effect = "Allow"
