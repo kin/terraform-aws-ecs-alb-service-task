@@ -1,12 +1,12 @@
 ## S3 Bucket for applications with CodeDeploy enabled only
 locals {
   taskdef_content = jsonencode({
-    family = var.ecs_service_name != null ? var.ecs_service_name : module.service_label.id
+    family               = var.ecs_service_name != null ? var.ecs_service_name : module.service_label.id
     containerDefinitions = var.container_definition_json
-    executionRoleArn = length(local.task_exec_role_arn) > 0 ? local.task_exec_role_arn : one(aws_iam_role.ecs_exec[*]["arn"])
-    networkMode      = var.network_mode
-    cpu              = var.task_cpu
-    memory           = var.task_memory
+    executionRoleArn     = length(local.task_exec_role_arn) > 0 ? local.task_exec_role_arn : one(aws_iam_role.ecs_exec[*]["arn"])
+    networkMode          = var.network_mode
+    cpu                  = var.task_cpu
+    memory               = var.task_memory
   })
   appspec_content = <<YAML
 version: 0.0
@@ -24,7 +24,7 @@ YAML
 data "archive_file" "appspec" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
-  type        = "zip"
+  type = "zip"
   source {
     content  = local.appspec_content
     filename = "appspec.yml"

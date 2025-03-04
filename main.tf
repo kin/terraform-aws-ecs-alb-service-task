@@ -20,8 +20,8 @@ locals {
 
   task_exec_policy_arns_map = merge({ for i, a in var.task_exec_policy_arns : format("_#%v_", i) => a }, var.task_exec_policy_arns_map)
 
-  container_name  = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_name : "rift"
-  container_port  = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
+  container_name = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_name : "rift"
+  container_port = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
 }
 
 module "task_label" {

@@ -90,7 +90,7 @@ resource "aws_codepipeline" "default" {
         TaskDefinitionTemplateArtifact = "SourceOutput"
         TaskDefinitionTemplatePath     = "taskdef.json"
         AppSpecTemplateArtifact        = "SourceOutput"
-        AppspecTemplatePath            = "appspec.yml"
+        AppSpecTemplatePath            = "appspec.yml"
       }
     }
   }
