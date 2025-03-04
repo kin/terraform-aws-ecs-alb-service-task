@@ -21,7 +21,7 @@ resource "aws_s3_object" "appspec_artifacts" {
 
   bucket = aws_s3_bucket.appspec_artifacts[0].id
   key    = "source/appspec.yml"
-  source = local.appspec_content
+  content = local.appspec_content
   etag   = local.appspec_sha256
   tags   = module.this.tags
 }
