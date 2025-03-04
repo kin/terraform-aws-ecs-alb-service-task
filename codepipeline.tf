@@ -64,7 +64,7 @@ resource "aws_iam_role_policy" "default" {
       {
         Effect = "Allow"
         Action = ["iam:PassRole"]
-        Resource = "${aws_iam_role.ecs_exec.arn}"
+        Resource = "${aws_iam_role.ecs_exec[0].arn}"
       }
     ]
   })
