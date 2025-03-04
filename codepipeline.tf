@@ -60,7 +60,6 @@ resource "aws_codepipeline" "default" {
     location = aws_s3_bucket.appspec_artifacts[0].bucket
     type     = "S3"
   }
-
   stage {
     name = "Source"
     action {
@@ -70,14 +69,12 @@ resource "aws_codepipeline" "default" {
       provider         = "S3"
       version          = "1"
       output_artifacts = ["SourceOutput"]
-
       configuration = {
         S3Bucket    = aws_s3_bucket.appspec_artifacts[0].bucket
-        S3ObjectKey = "${local.container_name}-appspec.yml"
+        S3ObjectKey = "source/appspec.yml"
       }
     }
   }
-
   stage {
     name = "Deploy"
     action {
@@ -87,12 +84,12 @@ resource "aws_codepipeline" "default" {
       provider        = "CodeDeploy"
       version         = "1"
       input_artifacts = ["SourceOutput"]
-
       configuration = {
         ApplicationName     = local.container_name
         DeploymentGroupName = local.container_name
       }
     }
   }
+  depends_on = [aws_s3_object.appspec_artifacts]
 }
 
