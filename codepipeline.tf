@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "default" {
           "ecs:UpdateService",
           "ecs:DescribeServices"
         ]
-        resources = "*"
+        Resource = "*"
       },
       {
         Effect   = "Allow"
