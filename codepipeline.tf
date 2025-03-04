@@ -81,7 +81,7 @@ resource "aws_codepipeline" "default" {
       name            = "CodeDeploy"
       category        = "Deploy"
       owner           = "AWS"
-      provider        = "CodeDeploy"
+      provider        = "CodeDeployToECS"
       version         = "1"
       input_artifacts = ["SourceOutput"]
       configuration = {
