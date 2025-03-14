@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 // IAM
 resource "aws_iam_role" "default" {
   name = "CodePipelineRole"
@@ -41,8 +39,8 @@ resource "aws_iam_role_policy" "default" {
         Resource = "*"
       },
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "ecs:RegisterTaskDefinition",
           "ecs:DescribeTaskDefinition",
           "ecs:UpdateService",
@@ -51,8 +49,8 @@ resource "aws_iam_role_policy" "default" {
         Resource = "*"
       },
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "elasticloadbalancing:DescribeTargetGroups",
           "elasticloadbalancing:DescribeListeners",
           "elasticloadbalancing:ModifyListener",
@@ -62,9 +60,9 @@ resource "aws_iam_role_policy" "default" {
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = ["iam:PassRole"]
-        Resource = "${aws_iam_role.ecs_exec[0].arn}"
+        Effect   = "Allow"
+        Action   = ["iam:PassRole"]
+        Resource = aws_iam_role.ecs_exec[0].arn
       }
     ]
   })
@@ -79,6 +77,7 @@ resource "aws_codepipeline" "default" {
     location = aws_s3_bucket.appspec_artifacts[0].bucket
     type     = "S3"
   }
+
   stage {
     name = "Source"
     action {
@@ -94,6 +93,7 @@ resource "aws_codepipeline" "default" {
       }
     }
   }
+
   stage {
     name = "Deploy"
     action {
@@ -115,4 +115,3 @@ resource "aws_codepipeline" "default" {
   }
   depends_on = [aws_s3_object.appspec_artifacts]
 }
-
