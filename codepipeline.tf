@@ -2,7 +2,7 @@
 resource "aws_iam_role" "default" {
   count = var.deployment_controller_type == "CODE_DEPLOY" ? 1 : 0
 
-  name = "${module.this.name}-codepipeline"
+  name = "${module.this.id}-codepipeline"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
