@@ -428,7 +428,7 @@ data "aws_subnet" "private_subnet_cidr" {
 #this should allow traffic from ecs services in the cluster to the web app for service connect
 
 resource "aws_security_group_rule" "allow_ingress_form_cluster_services" {
-  count                    = local.create_security_group && length(var.service_connect_configurations[0].service) == 0  ? 1 : 0
+  count                    = local.create_security_group && length(var.service_connect_configurations[0].service) != 0  ? 1 : 0
   description              = "Allow ingress from cluster services security groups"
   type                     = "ingress"
   from_port                = var.container_port
