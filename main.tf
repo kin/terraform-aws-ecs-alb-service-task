@@ -406,9 +406,42 @@ data "aws_security_group" "traefik" {
   count = local.create_security_group && var.use_traefik_security_group ? 1 : 0
   name  = "traefik-service"
 }
+
+
+data "aws_subnets" "private_subnets" {
+
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+
+  tags = {
+    "kin.co/subnet/type" = "private"
+  }
+}
+
+data "aws_subnet" "private_subnet_cidr" {
+  for_each = toset(data.aws_subnets.private_subnets.ids)
+  id       = each.value
+}
+
+#this should allow traffic from ecs services in the cluster to the web app for service connect
+
+resource "aws_security_group_rule" "allow_ingress_form_cluster_services" {
+  count                    = local.create_security_group && length(var.service_connect_configurations[0].service) != 0  ? 1 : 0
+  description              = "Allow ingress from cluster services security groups"
+  type                     = "ingress"
+  from_port                = var.container_port
+  to_port                  = var.container_port
+  protocol                 = "tcp"
+  security_group_id        = one(aws_security_group.ecs_service[*]["id"])
+  cidr_blocks              = [for s in data.aws_subnet.private_subnet_cidr : s.cidr_block]
+}
+
+
 resource "aws_security_group_rule" "traefik" {
   count                    = local.create_security_group && var.use_traefik_security_group ? 1 : 0
-  description              = "Allow inbound traffic from ALB"
+  description              = "Allow inbound traffic from Traefik service"
   type                     = "ingress"
   from_port                = var.container_port
   to_port                  = var.container_port
