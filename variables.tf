@@ -312,6 +312,17 @@ variable "deployment_controller_type" {
   }
 }
 
+variable "deployment_strategy" {
+  type        = string
+  description = "the strategy for deployment. Probably 'ROLLING' or 'BLUE_GREEN'"
+  default     = "ROLLING"
+}
+
+variable "deployment_bake_time" {
+  type    = number
+  default = null
+}
+
 variable "deployment_maximum_percent" {
   type        = number
   description = "The upper limit of the number of tasks (as a percentage of `desired_count`) that can be running in a service during a deployment"
