@@ -1,14 +1,14 @@
 locals {
-  enabled                 = module.this.enabled
-  ecs_service_enabled     = local.enabled && var.ecs_service_enabled
-  task_role_arn           = try(var.task_role_arn[0], tostring(var.task_role_arn), "")
-  create_task_role        = local.enabled && length(var.task_role_arn) == 0
-  task_exec_role_arn      = try(var.task_exec_role_arn[0], tostring(var.task_exec_role_arn), "")
-  create_exec_role        = local.enabled && length(var.task_exec_role_arn) == 0
-  enable_ecs_service_role = module.this.enabled && var.network_mode != "awsvpc" && length(var.ecs_load_balancers) >= 1
+  enabled                         = module.this.enabled
+  ecs_service_enabled             = local.enabled && var.ecs_service_enabled
+  task_role_arn                   = try(var.task_role_arn[0], tostring(var.task_role_arn), "")
+  create_task_role                = local.enabled && length(var.task_role_arn) == 0
+  task_exec_role_arn              = try(var.task_exec_role_arn[0], tostring(var.task_exec_role_arn), "")
+  create_exec_role                = local.enabled && length(var.task_exec_role_arn) == 0
+  enable_ecs_service_role         = module.this.enabled && var.network_mode != "awsvpc" && length(var.ecs_load_balancers) >= 1
   create_service_connect_tls_role = local.enabled && length(flatten(flatten(var.service_connect_configurations[*].service[*].tls[*]))) > 0 && length(compact(flatten(flatten(var.service_connect_configurations[*].service[*].tls[*].role_arn)))) == 0
-  create_security_group   = local.enabled && var.network_mode == "awsvpc" && var.security_group_enabled
-  create_task_definition  = local.enabled && length(var.task_definition) == 0
+  create_security_group           = local.enabled && var.network_mode == "awsvpc" && var.security_group_enabled
+  create_task_definition          = local.enabled && length(var.task_definition) == 0
 
   volumes = concat(var.docker_volumes, var.efs_volumes, var.fsx_volumes, var.bind_mount_volumes)
 
@@ -428,14 +428,14 @@ data "aws_subnet" "private_subnet_cidr" {
 #this should allow traffic from ecs services in the cluster to the web app for service connect
 
 resource "aws_security_group_rule" "allow_ingress_form_cluster_services" {
-  count                    = local.create_security_group && length(var.service_connect_configurations[0].service) != 0  ? 1 : 0
-  description              = "Allow ingress from cluster services security groups"
-  type                     = "ingress"
-  from_port                = var.container_port
-  to_port                  = var.container_port
-  protocol                 = "tcp"
-  security_group_id        = one(aws_security_group.ecs_service[*]["id"])
-  cidr_blocks              = [for s in data.aws_subnet.private_subnet_cidr : s.cidr_block]
+  count             = local.create_security_group && length(var.service_connect_configurations[0].service) != 0 ? 1 : 0
+  description       = "Allow ingress from cluster services security groups"
+  type              = "ingress"
+  from_port         = var.container_port
+  to_port           = var.container_port
+  protocol          = "tcp"
+  security_group_id = one(aws_security_group.ecs_service[*]["id"])
+  cidr_blocks       = [for s in data.aws_subnet.private_subnet_cidr : s.cidr_block]
 }
 
 
@@ -485,7 +485,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
       container_port = lookup(service_registries.value, "container_port", null)
     }
   }
-   dynamic "service_connect_configuration" {
+  dynamic "service_connect_configuration" {
     for_each = var.service_connect_configurations
     content {
       enabled   = service_connect_configuration.value.enabled
@@ -572,6 +572,11 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
 
   deployment_controller {
     type = var.deployment_controller_type
+  }
+
+  deployment_configuration {
+    strategy             = var.deployment_strategy
+    bake_time_in_minutes = var.deployment_bake_time
   }
 
   # https://www.terraform.io/docs/providers/aws/r/ecs_service.html#network_configuration
@@ -638,7 +643,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
       container_port = lookup(service_registries.value, "container_port", null)
     }
   }
-   dynamic "service_connect_configuration" {
+  dynamic "service_connect_configuration" {
     for_each = var.service_connect_configurations
     content {
       enabled   = service_connect_configuration.value.enabled
@@ -724,6 +729,11 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
 
   deployment_controller {
     type = var.deployment_controller_type
+  }
+
+  deployment_configuration {
+    strategy             = var.deployment_strategy
+    bake_time_in_minutes = var.deployment_bake_time
   }
 
   # https://www.terraform.io/docs/providers/aws/r/ecs_service.html#network_configuration
@@ -790,7 +800,7 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
       container_port = lookup(service_registries.value, "container_port", null)
     }
   }
-   dynamic "service_connect_configuration" {
+  dynamic "service_connect_configuration" {
     for_each = var.service_connect_configurations
     content {
       enabled   = service_connect_configuration.value.enabled
@@ -876,6 +886,11 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
 
   deployment_controller {
     type = var.deployment_controller_type
+  }
+
+  deployment_configuration {
+    strategy             = var.deployment_strategy
+    bake_time_in_minutes = var.deployment_bake_time
   }
 
   # https://www.terraform.io/docs/providers/aws/r/ecs_service.html#network_configuration
@@ -942,7 +957,7 @@ resource "aws_ecs_service" "default" {
       container_port = lookup(service_registries.value, "container_port", null)
     }
   }
-   dynamic "service_connect_configuration" {
+  dynamic "service_connect_configuration" {
     for_each = var.service_connect_configurations
     content {
       enabled   = service_connect_configuration.value.enabled
@@ -1029,6 +1044,11 @@ resource "aws_ecs_service" "default" {
 
   deployment_controller {
     type = var.deployment_controller_type
+  }
+
+  deployment_configuration {
+    strategy             = var.deployment_strategy
+    bake_time_in_minutes = var.deployment_bake_time
   }
 
   # https://www.terraform.io/docs/providers/aws/r/ecs_service.html#network_configuration
