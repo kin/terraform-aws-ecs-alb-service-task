@@ -647,3 +647,9 @@ variable "use_traefik_security_group" {
   description = "A flag to enable/disable adding the traefik service security group"
   default     = false
 }
+
+variable "availability_zone_rebalancing" {
+  type        = bool
+  default     = true
+  description = "whether ECS can automatically rebalance tags across AZs if needed"
+}
