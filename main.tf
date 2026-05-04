@@ -465,6 +465,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
+  availability_zone_rebalancing      = var.availability_zone_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -623,6 +624,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
+  availability_zone_rebalancing      = var.availability_zone_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -780,6 +782,7 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
+  availability_zone_rebalancing      = var.availability_zone_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -937,6 +940,7 @@ resource "aws_ecs_service" "default" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
+  availability_zone_rebalancing      = var.availability_zone_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
