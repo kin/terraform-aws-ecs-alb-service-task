@@ -9,14 +9,13 @@ locals {
     cpu                  = tostring(var.task_cpu)
     memory               = tostring(var.task_memory)
   })
-  task_definition = join("", aws_ecs_task_definition.default[*].arn)
   appspec_content = <<YAML
 version: 0.0
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "${local.task_definition}"
+        TaskDefinition: "${aws_ecs_task_definition.default[0].arn}"
         LoadBalancerInfo:
           ContainerName: "${local.container_name}"
           ContainerPort: ${local.container_port}
