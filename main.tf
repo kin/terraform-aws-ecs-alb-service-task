@@ -22,6 +22,8 @@ locals {
 
   container_name = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_name : "rift"
   container_port = length(var.ecs_load_balancers) > 0 ? var.ecs_load_balancers[0].container_port : "80"
+
+  az_rebalancing = var.availability_zone_rebalancing ? "ENABLED" : "DISABLED"
 }
 
 module "task_label" {
@@ -465,7 +467,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
-  availability_zone_rebalancing      = var.availability_zone_rebalancing
+  availability_zone_rebalancing      = local.az_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -624,7 +626,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
-  availability_zone_rebalancing      = var.availability_zone_rebalancing
+  availability_zone_rebalancing      = local.az_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -782,7 +784,7 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
-  availability_zone_rebalancing      = var.availability_zone_rebalancing
+  availability_zone_rebalancing      = local.az_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
@@ -940,7 +942,7 @@ resource "aws_ecs_service" "default" {
   wait_for_steady_state              = var.wait_for_steady_state
   force_new_deployment               = var.force_new_deployment
   enable_execute_command             = var.exec_enabled
-  availability_zone_rebalancing      = var.availability_zone_rebalancing
+  availability_zone_rebalancing      = local.az_rebalancing
 
   dynamic "capacity_provider_strategy" {
     for_each = var.capacity_provider_strategies
